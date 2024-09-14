@@ -5,6 +5,7 @@
 ```
 # install requirements
 pip3 install flask gpiozero
+```
 
 ```
 # run webserver
