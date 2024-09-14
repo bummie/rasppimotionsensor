@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Motion sensor raspberry pi demo</title>
+    <script src="{{url_for('static', filename='uPlot.min.js')}}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='uPlot.min.css')}}">
+</head>
+
+<body>
+    <h1>Group 3</h1>
+
+    <script>
+
+        const chart = makeChart();
+
+        const interval = setInterval(function () {
+            fetch('/events', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                },
+            })
+                .then(response => response.json())
+                .then(response => {
+                    const points = new Array();
+                    response.forEach((timestamp) => { points.push(timestamp); points.push(timestamp + 1); });
+
+                    chart.setData([points, Array.from({ length: points.length }, (v, i) => (i % 2 == 0 ? 1 : 0))]);
+                })
+
+        }, 1000);
+
+        function makeChart() {
+            console.time('chart');
+
+            let opts = {
+                title: "Raspberry pi motion events",
+                width: 2400,
+                height: 600,
+                scales: {
+                    x: {
+                        time: true
+                    },
+                    y: {
+
+                    }
+                },
+                series: [
+                    {},
+                    {
+                        label: "motion",
+                        stroke: "green",
+                    },
+                ]
+            };
+
+            return uPlot(opts, [[], []], document.body);
+        }
+    </script>
+</body>
+
+</html>
