@@ -9,7 +9,7 @@ motion_triggers = []
 
 app = Flask(__name__)
 
-#pir = MotionSensor(4)
+pir = MotionSensor(4)
 
 def add_sensor_trigger(events: list):
     events.append(int(time.time()))
@@ -17,16 +17,9 @@ def add_sensor_trigger(events: list):
 
 def motion_sensor():
     while True:
-    #	pir.wait_for_motion()
-
-        # Simulate motion events, if random integer is 3 then we add it as an "motion event"
-        # TODO: Change this out with the real sensor
-        randint = random.randint(0, 10)
-
-        if randint == 3:
-            add_sensor_trigger(motion_triggers)
-        time.sleep(1)
-    #	pir.wait_for_no_motion()
+        pir.wait_for_motion()
+        add_sensor_trigger(motion_triggers)
+        pir.wait_for_no_motion()
 
 @app.route('/events')
 def events():
@@ -42,4 +35,4 @@ if __name__=='__main__':
     threading.Thread(target=motion_sensor).start()
     
     # Start flask webserver
-    app.run() 
+    app.run(host="0.0.0.0")
